@@ -1,6 +1,6 @@
-module github.com/mpolden/echoip
+module github.com/gryffyn/ipinfo
 
-go 1.13
+go 1.16
 
 require (
 	github.com/oschwald/geoip2-golang v1.5.0

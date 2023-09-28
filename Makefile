@@ -1,12 +1,12 @@
 DOCKER ?= docker
-DOCKER_IMAGE ?= mpolden/echoip
+DOCKER_IMAGE ?= mpolden/ipinfo
 OS := $(shell uname)
 ifeq ($(OS),Linux)
 	TAR_OPTS := --wildcards
 endif
 XGOARCH := amd64
 XGOOS := linux
-XBIN := $(XGOOS)_$(XGOARCH)/echoip
+XBIN := $(XGOOS)_$(XGOARCH)/ipinfo
 
 all: lint test install
 
@@ -74,4 +74,4 @@ endif
 	@sha256sum $(GOPATH)/bin/$(XBIN)
 
 run:
-	go run cmd/echoip/main.go -a data/asn.mmdb -c data/city.mmdb -f data/country.mmdb -H x-forwarded-for -r -s -p
+	go run cmd/ipinfo/main.go -a data/asn.mmdb -c data/city.mmdb -f data/country.mmdb -H x-forwarded-for -r -s -p

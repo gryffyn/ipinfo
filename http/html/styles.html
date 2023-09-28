@@ -1,0 +1,151 @@
+<style>
+    :root {
+        --bg-color: #1d1e20;
+        --fg-color: #dadadb;
+        --hl-color: #f5a9c9;
+        --bg-l-color: #2c2e31;
+        --font-stack: "Source Code Pro", "Menlo", "Monaco", "Lucida Console", "Liberation Mono",
+        "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", "monospace", "serif";
+        --max-width: 52em;
+        --global-space: 0.5rem;
+        --body-font-size: 14px;
+    }
+
+    html,
+    .centcol {
+        background-color: var(--bg-color);
+        color: var(--fg-color);
+        font-family: var(--font-stack);
+    }
+
+    .centcol {
+        max-width: var(--max-width);
+        margin: 0 auto;
+        padding: 0 calc(var(--global-space) * 3);
+    }
+
+    h1 {
+        text-decoration: underline var(--hl-color);
+    }
+
+    h2 {
+        font-size: 2em;
+        margin: -0.2em 0;
+        text-decoration: underline var(--hl-color);
+    }
+
+    code {
+        font-family: var(--font-stack);
+        font-size: 14px;
+        padding: 4px 6px;
+        background: var(--bg-l-color);
+    }
+
+    pre {
+        font-family: var(--font-stack);
+        white-space: pre-wrap; /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+        white-space: -o-pre-wrap; /* Opera 7 */
+        word-wrap: break-word;
+    }
+
+    a:not(.logo-link) {
+        background-color: var(--bg-color);
+        color: var(--fg-color);
+    }
+
+    a:hover:not(.logo-link),
+    a:active:not(.logo-link) {
+        background: #3d3e3f;
+    }
+
+    .ip {
+        border: 2px solid var(--hl-color);
+        border-radius: 6px;
+        background: var(--bg-color);
+        font-size: 3.2em;
+        padding: 8px 20px;
+        word-wrap: break-word;
+        font-weight: bold;
+    }
+
+    .footer {
+        margin-top: 34px;
+        color: #8e8e8e !important;
+        border-top: 1px solid var(--bg-l-color);
+    }
+
+    .content {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1em;
+        padding-right: 1em;
+        max-width: 64em;
+    }
+
+    .info-table td,
+    .info-table th {
+        padding: 8px;
+        border: 2px solid #ababab;
+        word-wrap: break-word;
+    }
+
+    .info-table th[scope="row"] {
+        background-color: var(--bg-l-color);
+        color: rgb(220, 220, 220);
+        text-align: left;
+    }
+
+    .info-table {
+        width: 100%;
+        margin-top: 2em;
+        border-spacing: 0;
+        border: 2px solid #ababab;
+        border-radius: 6px;
+    }
+
+    .ip-addr {
+        margin: 1em 0 3em 1em;
+    }
+
+    .head {
+        width: 95%;
+        margin: 0 auto;
+        display: flex;
+        max-width: var(--max-width);
+        padding: 0 calc(var(--global-space) * 3);
+        gap: 10px
+    }
+
+    .site-title {
+        flex: 2;
+    }
+
+    svg {
+        max-width: 70%;
+        height: auto;
+        float: right;
+    }
+
+    .logo {
+        height: 80px;
+        margin: 2em 2em 0 2em;
+        flex: 1;
+    }
+
+    .footer {
+        font-size: var(--body-font-size);
+        margin: 3rem auto;
+        padding-top: .33em;
+        border-top: 1px solid var(--bg-l-color);
+        color: var(--bg-l-color);
+        text-align: right;
+        max-width: var(--max-width);
+    }
+
+    @media only screen and (max-width: 768px) {
+        .ip {
+            font-size: 2.5em;
+        }
+    }
+</style>

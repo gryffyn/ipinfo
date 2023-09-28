@@ -1,6 +1,6 @@
 # Build
-FROM golang:1.15-buster AS build
-WORKDIR /go/src/github.com/mpolden/echoip
+FROM golang:1.21-alpine AS build
+WORKDIR /go/src/github.com/gryffyn/ipinfo
 COPY . .
 
 # Must build without cgo because libc is unavailable in runtime image
@@ -11,8 +11,8 @@ RUN make
 FROM scratch
 EXPOSE 8080
 
-COPY --from=build /go/bin/echoip /opt/echoip/
-COPY html /opt/echoip/html
+COPY --from=build /go/bin/ipinfo /opt/ipinfo/
+COPY data /opt/ipinfo/data
 
-WORKDIR /opt/echoip
-ENTRYPOINT ["/opt/echoip/echoip"]
+WORKDIR /opt/ipinfo
+ENTRYPOINT ["/opt/ipinfo/ipinfo"]
