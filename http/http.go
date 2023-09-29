@@ -13,11 +13,9 @@ import (
 
     "net/http/pprof"
 
-    "github.com/gryffyn/ipinfo/iputil"
     "github.com/gryffyn/ipinfo/iputil/geo"
     "github.com/gryffyn/ipinfo/useragent"
 
-    "math/big"
     "net"
     "net/http"
     "strconv"
@@ -39,23 +37,24 @@ type Server struct {
 }
 
 type Response struct {
-    IP         net.IP               `json:"ip"`
-    IPDecimal  *big.Int             `json:"ip_decimal"`
-    Country    string               `json:"country,omitempty"`
-    CountryISO string               `json:"country_iso,omitempty"`
-    CountryEU  *bool                `json:"country_eu,omitempty"`
-    RegionName string               `json:"region_name,omitempty"`
-    RegionCode string               `json:"region_code,omitempty"`
-    MetroCode  uint                 `json:"metro_code,omitempty"`
-    PostalCode string               `json:"zip_code,omitempty"`
-    City       string               `json:"city,omitempty"`
-    Latitude   float64              `json:"latitude,omitempty"`
-    Longitude  float64              `json:"longitude,omitempty"`
-    Timezone   string               `json:"time_zone,omitempty"`
-    ASN        string               `json:"asn,omitempty"`
-    ASNOrg     string               `json:"asn_org,omitempty"`
-    Hostname   string               `json:"hostname,omitempty"`
-    UserAgent  *useragent.UserAgent `json:"user_agent,omitempty"`
+    IP                net.IP               `json:"ip"`
+    Country           string               `json:"country,omitempty"`
+    CountryISO        string               `json:"country_iso,omitempty"`
+    CountryEU         *bool                `json:"country_eu,omitempty"`
+    RegionName        string               `json:"region_name,omitempty"`
+    RegionCode        string               `json:"region_code,omitempty"`
+    MetroCode         uint                 `json:"metro_code,omitempty"`
+    PostalCode        string               `json:"zip_code,omitempty"`
+    City              string               `json:"city,omitempty"`
+    Latitude          float64              `json:"latitude,omitempty"`
+    Longitude         float64              `json:"longitude,omitempty"`
+    Timezone          string               `json:"time_zone,omitempty"`
+    ASN               string               `json:"asn,omitempty"`
+    ASNOrg            string               `json:"asn_org,omitempty"`
+    ReverseDNS        string               `json:"hostname,omitempty"`
+    ForwardReverseDNS string               `json:"forward_reverse_dns,omitempty"`
+    UserAgent         *useragent.UserAgent `json:"user_agent,omitempty"`
+    Protocol          string               `json:"protocol,omitempty"`
 }
 
 type PortResponse struct {
@@ -134,35 +133,38 @@ func (s *Server) newResponse(r *http.Request) (Response, error) {
         response.UserAgent = userAgentFromRequest(r)
         return response, nil
     }
-    ipDecimal := iputil.ToDecimal(ip)
     country, _ := s.gr.Country(ip)
     city, _ := s.gr.City(ip)
     asn, _ := s.gr.ASN(ip)
-    var hostname string
+    var reverseDNS string
+    var forwardReverseDNS []string
     if s.LookupAddr != nil {
-        hostname, _ = s.LookupAddr(ip)
+        reverseDNS, _ = s.LookupAddr(ip)
+        forwardReverseDNS, _ = net.LookupHost(reverseDNS)
     }
     var autonomousSystemNumber string
     if asn.AutonomousSystemNumber > 0 {
         autonomousSystemNumber = fmt.Sprintf("AS%d", asn.AutonomousSystemNumber)
     }
+
     response = Response{
-        IP:         ip,
-        IPDecimal:  ipDecimal,
-        Country:    country.Name,
-        CountryISO: country.ISO,
-        CountryEU:  country.IsEU,
-        RegionName: city.RegionName,
-        RegionCode: city.RegionCode,
-        MetroCode:  city.MetroCode,
-        PostalCode: city.PostalCode,
-        City:       city.Name,
-        Latitude:   city.Latitude,
-        Longitude:  city.Longitude,
-        Timezone:   city.Timezone,
-        ASN:        autonomousSystemNumber,
-        ASNOrg:     asn.AutonomousSystemOrganization,
-        Hostname:   hostname,
+        IP:                ip,
+        Country:           country.Name,
+        CountryISO:        country.ISO,
+        CountryEU:         country.IsEU,
+        RegionName:        city.RegionName,
+        RegionCode:        city.RegionCode,
+        MetroCode:         city.MetroCode,
+        PostalCode:        city.PostalCode,
+        City:              city.Name,
+        Latitude:          city.Latitude,
+        Longitude:         city.Longitude,
+        Timezone:          city.Timezone,
+        ASN:               autonomousSystemNumber,
+        ASNOrg:            asn.AutonomousSystemOrganization,
+        ReverseDNS:        reverseDNS,
+        ForwardReverseDNS: forwardReverseDNS[0],
+        Protocol:          r.Proto,
     }
     s.cache.Set(ip, response)
     response.UserAgent = userAgentFromRequest(r)

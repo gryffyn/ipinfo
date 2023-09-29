@@ -33,10 +33,6 @@
         <th scope="row">IP&nbsp;address</th>
         <td>{{ .IP }}</td>
       </tr>
-      <tr>
-        <th scope="row">IP&nbsp;address (decimal)</th>
-        <td>{{ .IPDecimal }}</td>
-      </tr>
       {{ if .Country }}
       <tr>
         <th scope="row">Country</th>
@@ -99,13 +95,18 @@
       </tr>
       {{ end }} {{ if .ASNOrg }}
       <tr>
-        <th scope="row">ASN (organization)</th>
+        <th scope="row">ASN (org)</th>
         <td>{{ .ASNOrg }}</td>
       </tr>
-      {{ end }} {{ if .Hostname }}
+      {{ end }} {{ if .ReverseDNS }}
       <tr>
-        <th scope="row">Hostname</th>
-        <td>{{ .Hostname }}</td>
+        <th scope="row">Reverse DNS</th>
+        <td>{{ .ReverseDNS }}</td>
+      </tr>
+      {{ end }} {{ if .ForwardReverseDNS }}
+      <tr>
+        <th scope="row">Forward Reverse&nbsp;DNS</th>
+        <td>{{ .ForwardReverseDNS }}</td>
       </tr>
       {{ end }} {{ if .UserAgent }} {{ if .UserAgent.Comment }}
       <tr>
@@ -121,6 +122,11 @@
       <tr>
         <th scope="row">User&nbsp;agent: Raw</th>
         <td>{{ .UserAgent.RawValue }}</td>
+      </tr>
+      {{ end }} {{ if .Protocol }}
+      <tr>
+        <th scope="row">HTTP Protocol</th>
+        <td>{{ .Protocol }}</td>
       </tr>
       {{ end }} {{ end }}
     </table>
