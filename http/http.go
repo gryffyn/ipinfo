@@ -55,6 +55,7 @@ type Response struct {
     ForwardReverseDNS string               `json:"forward_reverse_dns,omitempty"`
     UserAgent         *useragent.UserAgent `json:"user_agent,omitempty"`
     Protocol          string               `json:"protocol,omitempty"`
+    FRDNSMatch        bool                 `json:"frdns_match,omitempty"`
 }
 
 type PortResponse struct {
@@ -137,10 +138,17 @@ func (s *Server) newResponse(r *http.Request) (Response, error) {
     city, _ := s.gr.City(ip)
     asn, _ := s.gr.ASN(ip)
     var reverseDNS string
-    var forwardReverseDNS []string
+    var forwardReverseDNS string
+    frdnsmatch := false
     if s.LookupAddr != nil {
         reverseDNS, _ = s.LookupAddr(ip)
-        forwardReverseDNS, _ = net.LookupHost(reverseDNS)
+        frdnsList, _ := net.LookupHost(reverseDNS)
+        if len(frdnsList) > 0 {
+            forwardReverseDNS = frdnsList[0]
+            if net.ParseIP(forwardReverseDNS).Equal(ip) {
+                frdnsmatch = true
+            }
+        }
     }
     var autonomousSystemNumber string
     if asn.AutonomousSystemNumber > 0 {
@@ -163,8 +171,9 @@ func (s *Server) newResponse(r *http.Request) (Response, error) {
         ASN:               autonomousSystemNumber,
         ASNOrg:            asn.AutonomousSystemOrganization,
         ReverseDNS:        reverseDNS,
-        ForwardReverseDNS: forwardReverseDNS[0],
+        ForwardReverseDNS: forwardReverseDNS,
         Protocol:          r.Proto,
+        FRDNSMatch:        frdnsmatch,
     }
     s.cache.Set(ip, response)
     response.UserAgent = userAgentFromRequest(r)

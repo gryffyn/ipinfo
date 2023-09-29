@@ -106,7 +106,7 @@
       {{ end }} {{ if .ForwardReverseDNS }}
       <tr>
         <th scope="row">Forward Reverse&nbsp;DNS</th>
-        <td>{{ .ForwardReverseDNS }}</td>
+        {{ if .FRDNSMatch }}<td style="color: lightgreen">{{ .ForwardReverseDNS }}</td>{{ else }}<td>{{ .ForwardReverseDNS }}</td>{{ end }}
       </tr>
       {{ end }} {{ if .UserAgent }} {{ if .UserAgent.Comment }}
       <tr>
